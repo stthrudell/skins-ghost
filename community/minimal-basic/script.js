@@ -61,7 +61,7 @@ const callback = () => {
   // Bind the realtime data to the DOM
   const bindRealtimeData = () => {
 
-    // basicData = window.CAN_SIMULATE;
+    basicData = window.CAN_SIMULATE;
 
     // Check if the source has changed and update the cache
     if (!checkCache('useCAN', useCanChannel())) checkSource();

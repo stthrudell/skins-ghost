@@ -7,7 +7,8 @@
     "example": "community"
   },
   "scripts": {
-    "serve": "npx serve . -p 3210 -d -C -S"
+    "serve": "npx serve . -p 3210 -d -C -S & node server.js",
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -30,5 +31,14 @@
   "bugs": {
     "url": "https://github.com/ghostdashboard/skins/issues"
   },
-  "homepage": "https://github.com/ghostdashboard/skins#readme"
+  "homepage": "https://github.com/ghostdashboard/skins#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "serialport": "^12.0.0",
+    "socket.io": "^4.7.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
 }
