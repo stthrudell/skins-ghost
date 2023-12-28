@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="./style.css">
+  </head>
+
+  <body>
+    <!-- <div id="background"></div> -->
+    <div id="container">
+        <div id="top-content">
+          <div id="top-info">
+            <section class="icons">
+              <span id="turnLeft"><img src="../../assets/icons/turn-left.svg" alt="turnLeft" /></span>
+              <span id="ECUErr" data-etoggle="1"><img src="../../assets/icons/injection.svg" alt="ECUErr" /></span>
+              <span id="battAlt" data-etoggle="1"><img src="../../assets/icons/battery.svg" alt="battAlt" /></span>
+              <span id="eBrake" data-etoggle="1"><img src="../../assets/icons/handbrake.svg" alt="eBrake" /></span>
+              <span id="oilSwitch" data-etoggle="1"><img src="../../assets/icons/oil.svg" alt="oilSwitch" /></span>
+              <span id="turnRight"><img src="../../assets/icons/turn-right.svg" alt="turnRight" /></span>
+            </section>
+            <section class="icons bottom">
+              <span id="highBeam"><img src="../../assets/icons/hheadlight.svg" alt="highBeam" /></span>
+              <span id="parkLights"><img src="../../assets/icons/headlight.svg" alt="parkLights" /></span>
+              <span id="fogLights"><img src="../../assets/icons/milha.svg" alt="fogLights" /></span>
+              <span id="auxLights"><img src="../../assets/icons/neblina.svg" alt="auxLights" /></span>
+              <span id="fan"><img src="../../assets/icons/fan.svg" alt="fan" /></span>
+              <span id="openDoor"><img src="../../assets/icons/door.svg" alt="openDoor" /></span>
+            </section>
+          </div>
+        </div>
+        <div id="mid-content">
+          <div id="left-panel">
+            <div id="fuel">
+              <div class="nivel-bar" id="fuelLevel" nivel="6">
+                <span class="nivel nivel_0"></span>
+                <span class="nivel nivel_1"></span>
+                <span class="nivel nivel_2"></span>
+                <span class="nivel nivel_3"></span>
+                <span class="nivel nivel_4"></span>
+                <span class="nivel nivel_5"></span>
+                <span class="nivel nivel_7"></span>
+                <span class="nivel nivel_8"></span>
+                <div class="nivel-bar-marker">
+                  <span class="full">1</span>
+                  <span class="mid">1/2</span>
+                  <span class="empty">
+                    <span>0</span>
+                    <div class="mini-gauge">
+                      <img src="../../assets/icons/fuel.svg" alt="fuel-icon" />
+                    </div>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="center-panel">
+            <div id="rpm" class="range" style="--rpm:0" rpm-value="0">
+              <div class="range__label">x100</div>
+            </div>
+            <div class="panel-info " id="left-info">
+              <div id="battery" class="display">
+                <span class="label">BATT</span>
+                <span id="battLevel" class="value">0.0</span>
+                <span class="label">VOLTS</span>
+              </div>
+              <div id="battery" class="display">
+                <span class="label">FUEL</span>
+                <span class="value" id="fuelPressure">0.0</span>
+                <span class="label">BAR</span>
+              </div>
+            </div>
+            <div id="velocimeter" class="text-background-blur">
+              <span id="speedo">0</span>
+              <span id="label">km/h</span>
+            </div>
+            <div class="panel-info" id="right-info">
+              <div id="battery" class="display">
+                <span class="label">OIL</span>
+                <span class="value" id="oilPressure">0</span>
+                <span class="label">BAR</span>
+              </div>
+              <div id="battery" class="display">
+                <span class="label">BOOST</span>
+                <span class="value" id="mapBoost">0.0</span>
+                <span class="label">BAR</span>
+              </div>
+            </div>
+            <div id="odo">
+              <div id="trip" class="display">
+                <span class="label">TRIP</span>
+                <span class="value" id="kmTrip">0</span>
+                <span class="label">km</span>
+              </div>
+              <div id="total" class="display">
+                <span class="label">TOTAL</span>
+                <span class="value" id="kmTotal">000000</span>
+                <span class="label">km</span>
+              </div>
+            </div>
+          </div>
+          <div id="right-panel">
+            <div id="temp">
+              <div id="cltNow" class="nivel-bar revert" nivel="4" style="--temp-bar-color: #fff;">
+                <span class="nivel nivel_0"></span>
+                <span class="nivel nivel_1"></span>
+                <span class="nivel nivel_2"></span>
+                <span class="nivel nivel_3"></span>
+                <span class="nivel nivel_4"></span>
+                <span class="nivel nivel_5"></span>
+                <span class="nivel nivel_7"></span>
+                <span class="nivel nivel_8"></span>
+                <div class="nivel-bar-marker">
+                  <span class="max">H</span>
+                  <span class="mid">90°</span>
+                  <span class="min">
+                    <span>C</span>
+                    <div class="mini-gauge">
+                      <img src="../../assets/icons/temp.svg" alt="temp-icon" />
+                    </div>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <script type="module">
+      import { io } from "https://cdn.socket.io/4.7.2/socket.io.esm.min.js";
+      window.CAN_SIMULATE = {
+        rpm: 600,
+        kmh: 25,
+        kmhF: 0,
+        clt: 0,
+        lvlFuel: 0,
+        lvlFuelF: 0,
+        turnLeft: 1,
+        turnRight: 0,
+        parkLights: 1,
+        fogLights: 1,
+        auxLights: 1,
+        highBeam: 1,
+        eBrake: 1,
+        battAlt: 1,
+        ECUErr: 1,
+        oilSwitch: 1,
+        rearDefrost: 1,
+        fan: 1,
+        openDoor: 1,
+        airbag: 1,
+        odoNow: 0,
+      }
+
+      // await fetch(`http://localhost:3000/api/connectCAN`)
+      const socket = io('http://localhost:4000')
+
+      socket.on('connect', () => {
+        console.log('connected')
+      })
+
+      socket.on('data-update', msg => {
+        window.CAN_SIMULATE = msg
+      })
+
+      // setInterval(() => {
+      //   window.CAN_SIMULATE = {
+      //     ...window.CAN_SIMULATE,
+      //     kmh: window.CAN_SIMULATE.kmh + 1
+      //   }
+      // }, 1000)
+    </script>
+    <script src="../../assets/defaultSettings.js" type="text/javascript"></script>
+    <script src="../../assets/client.js" type="text/javascript"></script>
+    <script src="script.js" type="text/javascript"></script>
+  </body>
+</html>
