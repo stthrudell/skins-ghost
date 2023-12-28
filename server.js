@@ -10,7 +10,13 @@ const io = new Server(server, {
   }
 });
 const cors = require('cors');
-const { SerialPort } = require('serialport')
+
+const path = 'COM9'
+const baudRate = 115200
+const { SerialPort, ReadlineParser } = require('serialport')
+const port = new SerialPort({ path, baudRate })
+const parser = port.pipe(new ReadlineParser({ delimiter: '\r' }))
+
 
 app.use(cors({
   origin: '*'
@@ -50,29 +56,56 @@ app.get('/', async (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  setInterval(() => {
-    DATA.kmh = DATA.kmh + 1;
-    DATA.clt = randomIntFromInterval(0, 100);
-    DATA.turnLeft = randomIntFromInterval(0, 1);
-    DATA.turnRight = randomIntFromInterval(0, 1);
-    DATA.lvlFuel = randomIntFromInterval(0, 100);
-    DATA.lvlFuelF = randomIntFromInterval(0, 100);
-    DATA.turnLeft = randomIntFromInterval(0, 1);
-    DATA.turnRight = randomIntFromInterval(0, 1);
-    DATA.parkLights = randomIntFromInterval(0, 1);
-    DATA.fogLights = randomIntFromInterval(0, 1);
-    DATA.auxLights = randomIntFromInterval(0, 1);
-    DATA.highBeam = randomIntFromInterval(0, 1);
-    DATA.eBrake = randomIntFromInterval(0, 1);
-    DATA.battAlt = randomIntFromInterval(0, 1);
-    DATA.ECUErr = randomIntFromInterval(0, 1);
-    DATA.oilSwitch = randomIntFromInterval(0, 1);
-    DATA.rearDefrost = randomIntFromInterval(0, 1);
-    DATA.fan = randomIntFromInterval(0, 1);
-    DATA.openDoor = randomIntFromInterval(0, 1);
-    DATA.airbag = randomIntFromInterval(0, 1);
-    socket.broadcast.emit('data-update', DATA)
-  }, 500)
+  parser.on('data', (raw) => {
+    const dataRaw = raw.toString()
+    const data = dataRaw.indexOf('CAN Read') !== -1 ? {} : JSON.parse(dataRaw)
+    const payload = {
+      kmh: data.SPEED,
+      rpm: data.SPEED,
+      clt: 40,
+      turnLeft: data.setaEsquerda,
+      turnRight: data.setaDireita,
+      lvlFuel: data.fuel,
+      lvlFuelF: data.fuel,
+      parkLights: data.freioDeMao,
+      fogLights: data.lanterna,
+      auxLights: data.farolBaixo,
+      highBeam: data.farolAlto,
+      eBrake: data.freio,
+      battAlt: 0,
+      ECUErr: 0,
+      oilSwitch: 0,
+      rearDefrost: 0,
+      fan: 0,
+      openDoor: 0,
+      airbag: 0
+    }
+    socket.broadcast.emit('data-update', payload)
+  })
+
+  // setInterval(() => {
+  //   DATA.kmh = DATA.kmh + 1;
+  //   DATA.clt = randomIntFromInterval(0, 100);
+  //   DATA.turnLeft = randomIntFromInterval(0, 1);
+  //   DATA.turnRight = randomIntFromInterval(0, 1);
+  //   DATA.lvlFuel = randomIntFromInterval(0, 100);
+  //   DATA.lvlFuelF = randomIntFromInterval(0, 100);
+  //   DATA.turnLeft = randomIntFromInterval(0, 1);
+  //   DATA.turnRight = randomIntFromInterval(0, 1);
+  //   DATA.parkLights = randomIntFromInterval(0, 1);
+  //   DATA.fogLights = randomIntFromInterval(0, 1);
+  //   DATA.auxLights = randomIntFromInterval(0, 1);
+  //   DATA.highBeam = randomIntFromInterval(0, 1);
+  //   DATA.eBrake = randomIntFromInterval(0, 1);
+  //   DATA.battAlt = randomIntFromInterval(0, 1);
+  //   DATA.ECUErr = randomIntFromInterval(0, 1);
+  //   DATA.oilSwitch = randomIntFromInterval(0, 1);
+  //   DATA.rearDefrost = randomIntFromInterval(0, 1);
+  //   DATA.fan = randomIntFromInterval(0, 1);
+  //   DATA.openDoor = randomIntFromInterval(0, 1);
+  //   DATA.airbag = randomIntFromInterval(0, 1);
+  //   socket.broadcast.emit('data-update', DATA)
+  // }, 500)
   console.log('a user connected');
 });
 

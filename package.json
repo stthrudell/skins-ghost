@@ -7,7 +7,8 @@
     "example": "community"
   },
   "scripts": {
-    "serve": "npx serve . -p 3210 -d -C -S & node server.js",
+    "serve": "npx serve . -p 3210 -d -C -S",
+    "start": "concurrently --kill-others \"npm run serve\" \"npm run dev\"",
     "dev": "nodemon server.js"
   },
   "repository": {
@@ -39,6 +40,7 @@
     "socket.io": "^4.7.2"
   },
   "devDependencies": {
+    "concurrently": "^8.2.2",
     "nodemon": "^3.0.2"
   }
 }
